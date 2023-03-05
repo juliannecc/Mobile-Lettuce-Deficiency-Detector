@@ -1,5 +1,5 @@
 # Mobile-Lettuce-Deficiency-Detector
-# Architecture
+## Architecture
 ## Dataset
 The dataset used in this project is the [Lettuce-NPK-dataset](https://github.com/ramimalik782/Lettuce-NPK-dataset) by [ramimalik782](https://github.com/ramimalik782).
 It contains four folders which are as follows: 
