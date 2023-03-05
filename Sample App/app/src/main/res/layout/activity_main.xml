@@ -19,14 +19,24 @@
         android:textStyle="bold"
         />
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/ImageView"
-        android:layout_below="@+id/title"
-        android:layout_height="336sp"
-        android:layout_width="336sp"
-        android:layout_marginTop="20sp"
-        android:layout_centerHorizontal="true"
-        app:shapeAppearanceOverlay="@style/roundedImageStyle"
+<!--    <com.google.android.material.imageview.ShapeableImageView-->
+<!--        android:id="@+id/ImageView"-->
+<!--        android:layout_below="@+id/title"-->
+<!--        android:layout_height="336sp"-->
+<!--        android:layout_width="336sp"-->
+<!--        android:layout_marginTop="20sp"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        app:shapeAppearanceOverlay="@style/roundedImageStyle"-->
+<!--        />-->
+
+        <ImageView
+            android:id="@+id/ImageView"
+            android:layout_below="@+id/title"
+            android:layout_width="336sp"
+            android:layout_height="336sp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20sp"
+            android:background="@drawable/rounded_corner"
         />
 
     <TextView
@@ -70,15 +80,7 @@
         />
 
 
-<!--    <ImageView-->
-<!--        android:layout_width="336sp"-->
-<!--        android:layout_height="336sp"-->
-<!--        android:layout_below="@+id/title"-->
-<!--        android:id="@+id/ImageView"-->
-<!--        android:layout_centerHorizontal="true"-->
-<!--        android:layout_marginTop="20sp"-->
 
-<!--    />-->
 
 
 
