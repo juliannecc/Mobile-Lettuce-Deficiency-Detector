@@ -8,6 +8,7 @@ It contains four folders which are as follows:
 - -P (66 images)
 - -K (72 images)
 ## Data Preprocessing
+TensorFlow tools were used to load and preprocess the images in Jupyter Notebook.
 - Data Splitting
 - Data Resizing and Normalization
 - Data Augmentation
