@@ -8,6 +8,9 @@ It contains four folders which are as follows:
 - -P (66 images)
 - -K (72 images)
 ## Data Preprocessing
+- Data Splitting
+- Data Resizing and Normalization
+- Data Augmentation
 ## Image Processing
 ## Model Building
 ## Mobile Application
