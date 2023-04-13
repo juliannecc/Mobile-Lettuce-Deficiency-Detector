@@ -30,6 +30,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity {
@@ -38,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ImageView;
     TextView Result;
     Bitmap bitmap;
+    Mat mat;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -83,6 +87,10 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
                 int dimension = Math.min(image.getWidth(), image.getHeight());
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
+
+                mat = new Mat();
+                Utils.bitmapToMat(image, mat);
+
                 ImageView.setImageBitmap(image);
             }else{
                 Uri dat = data.getData();
@@ -92,6 +100,10 @@ public class MainActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                mat = new Mat();
+                Utils.bitmapToMat(image, mat);
+
                 ImageView.setImageBitmap(image);
 
             }
