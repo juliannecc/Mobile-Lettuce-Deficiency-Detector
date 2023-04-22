@@ -33,9 +33,13 @@ import android.widget.TextView;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView ImageView;
     TextView Result;
     Bitmap bitmap;
-    Mat mat;
+    // Mat src;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -97,8 +101,29 @@ public class MainActivity extends AppCompatActivity {
                 int dimension = Math.min(image.getWidth(), image.getHeight());
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
 
-                mat = new Mat();
-                Utils.bitmapToMat(image, mat);
+                Mat matRGB = new Mat();
+
+                Mat matLab = new Mat();
+                Mat AAA = new Mat();
+                Mat BBB = new Mat();
+                ArrayList<Mat> LabChannels = new ArrayList<>(3);
+
+                Mat maskA = new Mat();
+                Mat maskB = new Mat();
+
+                Utils.bitmapToMat(image, matRGB);
+
+                Imgproc.cvtColor(matRGB, matLab, Imgproc.COLOR_RGB2Lab);
+                Core.split(matLab, LabChannels);
+                Core.merge(new ArrayList<>(Arrays.asList(LabChannels.get(1), LabChannels.get(1), LabChannels.get(1))), AAA);
+                Core.merge(new ArrayList<>(Arrays.asList(LabChannels.get(2), LabChannels.get(2), LabChannels.get(2))), BBB);
+
+                Imgproc.cvtColor(AAA, AAA, Imgproc.COLOR_RGB2GRAY);
+                Imgproc.cvtColor(BBB, BBB, Imgproc.COLOR_RGB2GRAY);
+
+                double tsa = Imgproc.adaptiveThreshold();
+
+                Utils.matToBitmap(BBB, image);
 
                 ImageView.setImageBitmap(image);
             }else{
@@ -106,15 +131,19 @@ public class MainActivity extends AppCompatActivity {
                 Bitmap image = null;
                 try {
                     image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), dat);
+
+                    Mat matRGB = new Mat();
+
+                    Utils.bitmapToMat(image, matRGB);
+
+                    Imgproc.cvtColor(matRGB, matRGB, Imgproc.COLOR_RGB2GRAY);
+
+                    Utils.matToBitmap(matRGB, image);
+
+                    ImageView.setImageBitmap(image);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                mat = new Mat();
-                Utils.bitmapToMat(image, mat);
-
-                ImageView.setImageBitmap(image);
-
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
