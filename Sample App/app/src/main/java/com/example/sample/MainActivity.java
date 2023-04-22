@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.MediaStore;
 import android.service.controls.templates.ThumbnailTemplate;
+import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.NavController;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
@@ -46,6 +48,13 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
+    static {
+        if (OpenCVLoader.initDebug()) {
+            Log.d("MainActivity", "OpenCV is loaded");
+        } else {
+            Log.d("MainActivity", "OpenCV is not loaded");
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
