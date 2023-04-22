@@ -35,6 +35,7 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
 import java.io.IOException;
@@ -102,29 +103,30 @@ public class MainActivity extends AppCompatActivity {
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
 
                 Mat matRGB = new Mat();
-
                 Mat matLab = new Mat();
-                Mat AAA = new Mat();
-                Mat BBB = new Mat();
                 ArrayList<Mat> LabChannels = new ArrayList<>(3);
 
                 Mat maskA = new Mat();
                 Mat maskB = new Mat();
+                Mat maskAB = new Mat();
+
+                Mat dest = new Mat();
 
                 Utils.bitmapToMat(image, matRGB);
 
                 Imgproc.cvtColor(matRGB, matLab, Imgproc.COLOR_RGB2Lab);
                 Core.split(matLab, LabChannels);
-                Core.merge(new ArrayList<>(Arrays.asList(LabChannels.get(1), LabChannels.get(1), LabChannels.get(1))), AAA);
-                Core.merge(new ArrayList<>(Arrays.asList(LabChannels.get(2), LabChannels.get(2), LabChannels.get(2))), BBB);
 
-                Imgproc.cvtColor(AAA, AAA, Imgproc.COLOR_RGB2GRAY);
-                Imgproc.cvtColor(BBB, BBB, Imgproc.COLOR_RGB2GRAY);
+                Imgproc.threshold(LabChannels.get(1), maskA, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);
+                Imgproc.threshold(LabChannels.get(2), maskB, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
 
-                double tsa = Imgproc.adaptiveThreshold();
+                Core.bitwise_or(maskA, maskB, maskAB);
 
-                Utils.matToBitmap(BBB, image);
+                Core.add(dest, Scalar.all(0), dest);
 
+                matRGB.copyTo(dest, maskAB);
+
+                Utils.matToBitmap(dest, image);
                 ImageView.setImageBitmap(image);
             }else{
                 Uri dat = data.getData();
@@ -133,14 +135,32 @@ public class MainActivity extends AppCompatActivity {
                     image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), dat);
 
                     Mat matRGB = new Mat();
+                    Mat matLab = new Mat();
+                    ArrayList<Mat> LabChannels = new ArrayList<>(3);
+
+                    Mat maskA = new Mat();
+                    Mat maskB = new Mat();
+                    Mat maskAB = new Mat();
+
+                    Mat dest = new Mat();
 
                     Utils.bitmapToMat(image, matRGB);
 
-                    Imgproc.cvtColor(matRGB, matRGB, Imgproc.COLOR_RGB2GRAY);
+                    Imgproc.cvtColor(matRGB, matLab, Imgproc.COLOR_RGB2Lab);
+                    Core.split(matLab, LabChannels);
 
-                    Utils.matToBitmap(matRGB, image);
+                    Imgproc.threshold(LabChannels.get(1), maskA, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);
+                    Imgproc.threshold(LabChannels.get(2), maskB, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
 
+                    Core.bitwise_or(maskA, maskB, maskAB);
+
+                    Core.add(dest, Scalar.all(0), dest);
+
+                    matRGB.copyTo(dest, maskAB);
+
+                    Utils.matToBitmap(dest, image);
                     ImageView.setImageBitmap(image);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
