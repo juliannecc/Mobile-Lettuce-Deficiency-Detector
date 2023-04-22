@@ -1,0 +1,2 @@
+ninja: Entering directory `C:\Users\julia\Desktop\Mobile-Lettuce-Deficiency-Detector\Sample App\OpenCV4\.cxx\Debug\732y3f49\x86'
+ninja: no work to do.
