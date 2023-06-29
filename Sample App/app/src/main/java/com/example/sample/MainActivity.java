@@ -8,6 +8,7 @@ import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.example.sample.ml.MNetSmall;
 import com.example.sample.ml.Vggseg;
 
 import androidx.annotation.Nullable;
@@ -26,10 +27,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Scalar;
 import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.support.image.TensorImage;
 import org.tensorflow.lite.support.model.Model;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
@@ -89,8 +92,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    public TensorBuffer segmentImage(Bitmap image) {
+    public Bitmap segmentImage(Bitmap image) {
         TensorBuffer outputFeature0 = null;
+        Bitmap mask = null;
         try {
             Vggseg model = Vggseg.newInstance(getApplicationContext());
 
@@ -117,18 +121,23 @@ public class MainActivity extends AppCompatActivity {
             Vggseg.Outputs outputs = model.process(inputFeature0);
             outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
 
+            TensorImage tensorImage = new TensorImage(outputFeature0.getDataType());  // Create a TensorImage with the same data type
+            tensorImage.load(outputFeature0);  // Load the data from TensorBuffer to TensorImage
+
+            mask = tensorImage.getBitmap();
+
             // Releases model resources if no longer used.
             model.close();
         } catch (IOException e) {
             // TODO Handle the exception
         }
 
-        return outputFeature0;
+        return mask;
     }
 
     public void classifyImage(Bitmap image){
         try {
-            Model model = Model.newInstance(getApplicationContext());
+            MNetSmall model = MNetSmall.newInstance(getApplicationContext());
 
             // Creates inputs for reference.
             TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 256, 256, 3}, DataType.FLOAT32);
@@ -150,8 +159,21 @@ public class MainActivity extends AppCompatActivity {
             inputFeature0.loadBuffer(byteBuffer);
 
             // Runs model inference and gets result.
-            Model.Outputs outputs = model.process(inputFeature0);
+            MNetSmall.Outputs outputs = model.process(inputFeature0);
             TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+
+            float[] confidences = outputFeature0.getFloatArray();
+
+            int MaxPos = 0;
+            float Maxconfidence = 0;
+            for(int i = 0; i < confidences.length; i++){
+                if(confidences[i]>Maxconfidence){
+                    Maxconfidence = confidences[i];
+                    MaxPos = i;
+                }
+            }
+            String[] classes = {"-K", "-N", "Healthy"};
+            result.setText(classes[MaxPos]);
 
             // Releases model resources if no longer used.
             model.close();
@@ -171,11 +193,21 @@ public class MainActivity extends AppCompatActivity {
 
                 image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
                 Bitmap maskA = segmentImage(image);
-                Bitmap segmentedImage = [];
-                Core.bitwise_or(MaskA, image, segmentedImage);
+
+                Mat segmentedImage = new Mat();
+                Mat matRGB = new Mat();
+                Mat maskB = new Mat();
+                Mat dest = new Mat();
+
+                Utils.bitmapToMat(image, matRGB);
+                Utils.bitmapToMat(maskA, maskB);
+
+                Core.bitwise_or(matRGB, maskB, segmentedImage);
                 Core.add(dest, Scalar.all(0), dest);
+                matRGB.copyTo(dest, segmentedImage);
+                Utils.matToBitmap(dest, image);
 
-
+                classifyImage(image);
 
 //                Mat matRGB = new Mat();
 //                Mat matLab = new Mat();
@@ -211,7 +243,23 @@ public class MainActivity extends AppCompatActivity {
                     ImageView.setImageBitmap(image);
 
                     image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
-                    Mat maskA = segmentImage(image);
+                    Bitmap maskA = segmentImage(image);
+                    Bitmap maskA = segmentImage(image);
+
+                    Mat segmentedImage = new Mat();
+                    Mat matRGB = new Mat();
+                    Mat maskB = new Mat();
+                    Mat dest = new Mat();
+
+                    Utils.bitmapToMat(image, matRGB);
+                    Utils.bitmapToMat(maskA, maskB);
+
+                    Core.bitwise_or(matRGB, maskB, segmentedImage);
+                    Core.add(dest, Scalar.all(0), dest);
+                    matRGB.copyTo(dest, segmentedImage);
+                    Utils.matToBitmap(dest, image);
+
+                    classifyImage(image);
 
 //                    Mat matRGB = new Mat();
 //                    Mat matLab = new Mat();
