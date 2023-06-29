@@ -37,6 +37,7 @@ android {
     }
     buildFeatures {
         viewBinding true
+        mlModelBinding true
     }
     sourceSets {
         main {
@@ -51,10 +52,18 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.navigation:navigation-fragment:2.4.1'
     implementation 'androidx.navigation:navigation-ui:2.4.1'
     implementation project(path: ':OpenCV4')
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0'
+    implementation 'org.tensorflow:tensorflow-lite-metadata:0.1.0'
+    implementation 'org.tensorflow:tensorflow-lite-task-vision-play-services:0.4.2'
+    implementation 'com.google.android.gms:play-services-tflite-gpu:16.1.0'
+    implementation 'org.tensorflow:tensorflow-lite-support:0.1.0-rc1'
+    implementation 'org.tensorflow:tensorflow-lite:+'
+    implementation 'org.tensorflow:tensorflow-lite-gpu:+'
+    implementation 'org.tensorflow:tensorflow-lite-support:+'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
