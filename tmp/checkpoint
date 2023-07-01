@@ -1,0 +1,2 @@
+model_checkpoint_path: "vgg_segnet_1.00010"
+all_model_checkpoint_paths: "vgg_segnet_1.00010"
