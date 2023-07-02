@@ -1,7 +1,7 @@
 import urllib.request
 import os
 
-with open("test.csv", 'r') as f: 
+with open("train_add.csv", 'r') as f: 
     files = f.read().splitlines()
     for i in range(len(files)):
         files[i] = files[i].split(',')
