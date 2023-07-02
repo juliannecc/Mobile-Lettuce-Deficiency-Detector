@@ -13,10 +13,10 @@ with open("text.txt", "r") as f:
     # files.insert(0,fields)
 print(files)
 
-with open('GFG', 'w',newline='', encoding='utf-8') as f:
+with open('unstrat_noquotes', 'w',newline='', encoding='utf-8') as f:
      
     # using csv.writer method from CSV package
-    write = csv.writer(f, quoting=csv.QUOTE_ALL)
+    write = csv.writer(f, quoting=csv.QUOTE_NONE)
      
     write.writerow(fields)
     write.writerows(files)
