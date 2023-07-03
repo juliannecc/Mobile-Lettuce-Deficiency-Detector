@@ -36,14 +36,14 @@ for class_name in folder:
         # Image Setup
         imRGB = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         im_arr = np.array(imRGB)
-        im_resized = cv2.resize(im_arr, (256,256), interpolation = cv2.INTER_NEAREST)
+        im_resized = cv2.resize(im_arr, (512,512), interpolation = cv2.INTER_NEAREST)
         im_in = np.expand_dims(im_resized, axis=0)
 
         # Get mask
         f_pred = model.predict(im_in, batch_size=1)
 
         # Refine Mask
-        mask = np.reshape(f_pred, (128, 128, -1))
+        mask = np.reshape(f_pred, (256, 256, -1))
         mask = mask[:, :, 0]
         mask[mask < 0.9],  mask[mask > 0.9] = 0, 255
 
