@@ -50,8 +50,8 @@ for class_name in folder:
         # Convert, Invert, and Resize Image
         mask = np.uint8(mask)
         mask = np.invert(mask)
-        mask_resized = cv2.resize(mask, (256, 256), interpolation=cv2.INTER_NEAREST)
-        im_arr = cv2.resize(im_arr, (256,256), interpolation=cv2.INTER_NEAREST)
+        mask_resized = cv2.resize(mask, (512, 512), interpolation=cv2.INTER_NEAREST)
+        im_arr = cv2.resize(im_arr, (512,512), interpolation=cv2.INTER_NEAREST)
 
         # Mask Image
         masked = cv2.bitwise_and(im_arr, im_arr, mask=mask_resized)
