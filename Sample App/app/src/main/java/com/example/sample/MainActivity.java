@@ -3,19 +3,20 @@ package com.example.sample;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.example.sample.ml.MNetSmall;
-import com.example.sample.ml.Vggseg;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 
 import androidx.navigation.ui.AppBarConfiguration;
@@ -29,16 +30,28 @@ import android.widget.TextView;
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
+import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
+import org.opencv.core.MatOfInt;
+import org.opencv.imgproc.Imgproc;
 import org.tensorflow.lite.DataType;
+import org.tensorflow.lite.Interpreter;
+import org.tensorflow.lite.support.image.ImageProcessor;
 import org.tensorflow.lite.support.image.TensorImage;
-import org.tensorflow.lite.support.model.Model;
+import org.tensorflow.lite.support.image.ops.ResizeOp;
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     TextView Result;
     Bitmap bitmap;
     // Mat src;
-    int imageSize =  256;
+    int imageSize =  512;
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
@@ -92,202 +105,124 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    public Bitmap segmentImage(Bitmap image) {
-        TensorBuffer outputFeature0 = null;
-        Bitmap mask = null;
-        try {
-            Vggseg model = Vggseg.newInstance(getApplicationContext());
-
-            // Creates inputs for reference.
-            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 256, 256, 3}, DataType.FLOAT32);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * imageSize * imageSize * 3);
-            byteBuffer.order(ByteOrder.nativeOrder());
-            int[] intValues = new int[imageSize * imageSize];
-            image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
-            int pixel = 0;
-
-            for (int i = 0; i < imageSize; i++) {
-                for (int j = 0; j < imageSize; j++) {
-                    int val = intValues[pixel++];
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f / 1));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f / 1));
-                    byteBuffer.putFloat((val & 0xFF) * (1.f / 1));
-                }
-            }
-
-            inputFeature0.loadBuffer(byteBuffer);
-
-            // Runs model inference and gets result.
-            Vggseg.Outputs outputs = model.process(inputFeature0);
-            outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-
-            TensorImage tensorImage = new TensorImage(outputFeature0.getDataType());  // Create a TensorImage with the same data type
-            tensorImage.load(outputFeature0);  // Load the data from TensorBuffer to TensorImage
-
-            mask = tensorImage.getBitmap();
-
-            // Releases model resources if no longer used.
-            model.close();
-        } catch (IOException e) {
-            // TODO Handle the exception
+    public static int[] convertFloatsToInts(float[] input)
+    {
+        if (input == null)
+        {
+            return null; // Or throw an exception - your choice
         }
+        int[] output = new int[input.length];
+        for (int i = 0; i < input.length; i++)
+        {
+            output[i] = Math.round(input[i])*255;
+        }
+        return output;
+    }
+    public float[] segmentImage(Bitmap image) {
+        float[] data = new float[0];
+        try {
+            Interpreter interpreter = new Interpreter(loadModelFile());
+            interpreter.allocateTensors();
 
-        return mask;
+            ImageProcessor imageProcessor =
+                    new ImageProcessor.Builder()
+                            .add(new ResizeOp(imageSize, imageSize, ResizeOp.ResizeMethod.NEAREST_NEIGHBOR))
+                            .build();
+            TensorImage tensorImage = new TensorImage(DataType.FLOAT32);
+            tensorImage.load(image);
+            tensorImage = imageProcessor.process(tensorImage);
+
+            TensorBuffer outputBuffer = TensorBuffer.createFixedSize(new int[]{1, 65536, 2}, DataType.FLOAT32);
+            interpreter.run(tensorImage.getBuffer(), outputBuffer.getBuffer());
+            interpreter.close();
+            data = outputBuffer.getFloatArray();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return data;
     }
 
-    public void classifyImage(Bitmap image){
-        try {
-            MNetSmall model = MNetSmall.newInstance(getApplicationContext());
+    private MappedByteBuffer loadModelFile() throws IOException {
+        AssetFileDescriptor fileDescriptor=this.getAssets().openFd("vggseg.tflite");
+        FileInputStream inputStream=new FileInputStream(fileDescriptor.getFileDescriptor());
+        FileChannel fileChannel=inputStream.getChannel();
+        long startOffset=fileDescriptor.getStartOffset();
+        long declareLength=fileDescriptor.getDeclaredLength();
+        return fileChannel.map(FileChannel.MapMode.READ_ONLY,startOffset,declareLength);
+    }
 
-            // Creates inputs for reference.
-            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, 256, 256, 3}, DataType.FLOAT32);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * imageSize * imageSize * 3);
-            byteBuffer.order(ByteOrder.nativeOrder());
-            int [] intValues = new int[imageSize * imageSize];
-            image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
-            int pixel = 0;
+//  https://stackoverflow.com/questions/68314872/how-to-convert-the-int-array-to-byte-array-so-that-i-can-make-a-bitmap-by-byte
+    public static byte[] intArrayToByteArray(int[] intArray) {
 
-            for(int i = 0; i < imageSize; i++){
-                for(int j = 0; j < imageSize; j++) {
-                    int val = intValues[pixel++];
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f/1));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f/1));
-                    byteBuffer.putFloat((val & 0xFF)  * (1.f/1));
-                }
+        byte[] ba = new byte[intArray.length * 4];
+
+        for(int i = 0, k = 0; i < intArray.length; i++) {
+            int temp= intArray[i];
+            for(int j = 0; j < 4; j++, k++) {
+                ba[k] = (byte)((temp>> (8 * j)) & 0xFF);
             }
-
-            inputFeature0.loadBuffer(byteBuffer);
-
-            // Runs model inference and gets result.
-            MNetSmall.Outputs outputs = model.process(inputFeature0);
-            TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-
-            float[] confidences = outputFeature0.getFloatArray();
-
-            int MaxPos = 0;
-            float Maxconfidence = 0;
-            for(int i = 0; i < confidences.length; i++){
-                if(confidences[i]>Maxconfidence){
-                    Maxconfidence = confidences[i];
-                    MaxPos = i;
-                }
-            }
-            String[] classes = {"-K", "-N", "Healthy"};
-            result.setText(classes[MaxPos]);
-
-            // Releases model resources if no longer used.
-            model.close();
-        } catch (IOException e) {
-            // TODO Handle the exception
         }
+        return ba;
+    }
+
+    public static Bitmap byteArrayToBitmap(byte[] byteArray, int width, int height) {
+        ByteBuffer buffer = ByteBuffer.wrap(byteArray);
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        bitmap.setHasAlpha(false);
+        bitmap.copyPixelsFromBuffer(buffer);
+        return bitmap;
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+
         if (resultCode == RESULT_OK) {
             if (requestCode == 3) {
                 Bitmap image = (Bitmap) data.getExtras().get("data");
                 int dimension = Math.min(image.getWidth(), image.getHeight());
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
-                ImageView.setImageBitmap(image);
 
-                image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
-                Bitmap maskA = segmentImage(image);
+                float[] outputArr = segmentImage(image);
+                ArrayList<Float> mask = new ArrayList<>();
 
-                Mat segmentedImage = new Mat();
-                Mat matRGB = new Mat();
-                Mat maskB = new Mat();
-                Mat dest = new Mat();
+                for(int i =0;i< outputArr.length;i=i+2){
+                    mask.add(outputArr[i]);
+                }
 
-                Utils.bitmapToMat(image, matRGB);
-                Utils.bitmapToMat(maskA, maskB);
+                Bitmap resized = Bitmap.createScaledBitmap(image, 256, 256, false);
+                Bitmap output = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
 
-                Core.bitwise_or(matRGB, maskB, segmentedImage);
-                Core.add(dest, Scalar.all(0), dest);
-                matRGB.copyTo(dest, segmentedImage);
-                Utils.matToBitmap(dest, image);
+                for (int y = 0; y < 256; y++) {
+                    for (int x = 0; x < 256; x++) {
+                        output.setPixel(x, y, mask.get(y * 256 + x) > 0.9 ? Color.TRANSPARENT : resized.getPixel(x,y));
+                    }
+                }
+                Bitmap outputResized = Bitmap.createScaledBitmap(output, 512, 512, false);
 
-                classifyImage(image);
-
-//                Mat matRGB = new Mat();
-//                Mat matLab = new Mat();
-//                ArrayList<Mat> LabChannels = new ArrayList<>(3);
-//
-//                Mat maskA = new Mat();
-//                Mat maskB = new Mat();
-//                Mat maskAB = new Mat();
-//
-//                Mat dest = new Mat();
-//
-//                Utils.bitmapToMat(image, matRGB);
-//
-//                Imgproc.cvtColor(matRGB, matLab, Imgproc.COLOR_RGB2Lab);
-//                Core.split(matLab, LabChannels);
-//
-//                Imgproc.threshold(LabChannels.get(1), maskA, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);
-//                Imgproc.threshold(LabChannels.get(2), maskB, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
-
-//                Core.bitwise_or(maskA, maskB, maskAB);
-//
-//                Core.add(dest, Scalar.all(0), dest);
-//
-//                matRGB.copyTo(dest, maskAB);
-//
-//                Utils.matToBitmap(dest, image);
-                ImageView.setImageBitmap(image);
+                ImageView.setImageBitmap(outputResized);
             }else{
                 Uri dat = data.getData();
                 Bitmap image = null;
                 try {
                     image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), dat);
-                    ImageView.setImageBitmap(image);
+                    float[] outputArr = segmentImage(image);
+                    ArrayList<Float> mask = new ArrayList<>();
 
-                    image = Bitmap.createScaledBitmap(image, imageSize, imageSize, false);
-                    Bitmap maskA = segmentImage(image);
-                    Bitmap maskA = segmentImage(image);
+                    for(int i =0;i< outputArr.length;i=i+2){
+                        mask.add(outputArr[i]);
+                    }
 
-                    Mat segmentedImage = new Mat();
-                    Mat matRGB = new Mat();
-                    Mat maskB = new Mat();
-                    Mat dest = new Mat();
+                    Bitmap resized = Bitmap.createScaledBitmap(image, 256, 256, false);
+                    Bitmap output = Bitmap.createBitmap(256, 256, Bitmap.Config.ARGB_8888);
 
-                    Utils.bitmapToMat(image, matRGB);
-                    Utils.bitmapToMat(maskA, maskB);
-
-                    Core.bitwise_or(matRGB, maskB, segmentedImage);
-                    Core.add(dest, Scalar.all(0), dest);
-                    matRGB.copyTo(dest, segmentedImage);
-                    Utils.matToBitmap(dest, image);
-
-                    classifyImage(image);
-
-//                    Mat matRGB = new Mat();
-//                    Mat matLab = new Mat();
-//                    ArrayList<Mat> LabChannels = new ArrayList<>(3);
-//
-//                    Mat maskA = new Mat();
-//                    Mat maskB = new Mat();
-//                    Mat maskAB = new Mat();
-//
-//                    Mat dest = new Mat();
-//
-//                    Utils.bitmapToMat(image, matRGB);
-//
-//                    Imgproc.cvtColor(matRGB, matLab, Imgproc.COLOR_RGB2Lab);
-//                    Core.split(matLab, LabChannels);
-//
-//                    Imgproc.threshold(LabChannels.get(1), maskA, 0, 255, Imgproc.THRESH_BINARY_INV + Imgproc.THRESH_OTSU);
-//                    Imgproc.threshold(LabChannels.get(2), maskB, 0, 255, Imgproc.THRESH_BINARY + Imgproc.THRESH_OTSU);
-//
-//                    Core.bitwise_or(maskA, maskB, maskAB);
-//
-//                    Core.add(dest, Scalar.all(0), dest);
-//
-//                    matRGB.copyTo(dest, maskAB);
-//
-//                    Utils.matToBitmap(dest, image);
-                    ImageView.setImageBitmap(image);
-
+                    for (int y = 0; y < 256; y++) {
+                        for (int x = 0; x < 256; x++) {
+                                output.setPixel(x, y, mask.get(y * 256 + x) > 0.9 ? Color.TRANSPARENT : resized.getPixel(x,y));
+                             }
+                    }
+                    Bitmap outputResized = Bitmap.createScaledBitmap(output, 512, 512, false);
+                   ImageView.setImageBitmap(outputResized);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

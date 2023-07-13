@@ -2,7 +2,7 @@
   {
     "level_": 0,
     "message_": "Start JSON generation. Platform version: 21 min SDK version: arm64-v8a",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
+    "file_": "C:\\Users\\Justine\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
     "tag_": "debug|arm64-v8a",
     "diagnosticCode_": 0,
     "memoizedIsInitialized": 1,
@@ -11,12 +11,12 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -1528056207
+    "memoizedHashCode": -1117262477
   },
   {
     "level_": 0,
-    "message_": "rebuilding JSON C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\Debug\\732y3f49\\arm64-v8a\\android_gradle_build.json due to:",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
+    "message_": "JSON \u0027C:\\Users\\Justine\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\Debug\\732y3f49\\arm64-v8a\\android_gradle_build.json\u0027 was up-to-date",
+    "file_": "C:\\Users\\Justine\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
     "tag_": "debug|arm64-v8a",
     "diagnosticCode_": 0,
     "memoizedIsInitialized": 1,
@@ -25,138 +25,12 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": 63726210
-  },
-  {
-    "level_": 0,
-    "message_": "- no fingerprint file, will remove stale configuration folder",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 46588308
-  },
-  {
-    "level_": 0,
-    "message_": "removing stale contents from \u0027C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\Debug\\732y3f49\\arm64-v8a\u0027",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1935856224
-  },
-  {
-    "level_": 0,
-    "message_": "created folder \u0027C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\Debug\\732y3f49\\arm64-v8a\u0027",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1644198124
-  },
-  {
-    "level_": 0,
-    "message_": "executing cmake @echo off\n\"C:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n  \"-HC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\libcxx_helper\" ^\n  \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n  \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n  \"-DCMAKE_SYSTEM_VERSION\u003d21\" ^\n  \"-DANDROID_PLATFORM\u003dandroid-21\" ^\n  \"-DANDROID_ABI\u003darm64-v8a\" ^\n  \"-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a\" ^\n  \"-DANDROID_NDK\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n  \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n  \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\732y3f49\\\\obj\\\\arm64-v8a\" ^\n  \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\732y3f49\\\\obj\\\\arm64-v8a\" ^\n  \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n  \"-BC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\.cxx\\\\Debug\\\\732y3f49\\\\arm64-v8a\" ^\n  -GNinja ^\n  \"-DANDROID_STL\u003dc++_shared\"\n",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1986781967
-  },
-  {
-    "level_": 0,
-    "message_": "@echo off\n\"C:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\cmake.exe\" ^\n  \"-HC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\libcxx_helper\" ^\n  \"-DCMAKE_SYSTEM_NAME\u003dAndroid\" ^\n  \"-DCMAKE_EXPORT_COMPILE_COMMANDS\u003dON\" ^\n  \"-DCMAKE_SYSTEM_VERSION\u003d21\" ^\n  \"-DANDROID_PLATFORM\u003dandroid-21\" ^\n  \"-DANDROID_ABI\u003darm64-v8a\" ^\n  \"-DCMAKE_ANDROID_ARCH_ABI\u003darm64-v8a\" ^\n  \"-DANDROID_NDK\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_ANDROID_NDK\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\" ^\n  \"-DCMAKE_TOOLCHAIN_FILE\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\ndk\\\\23.1.7779620\\\\build\\\\cmake\\\\android.toolchain.cmake\" ^\n  \"-DCMAKE_MAKE_PROGRAM\u003dC:\\\\Users\\\\julia\\\\AppData\\\\Local\\\\Android\\\\Sdk\\\\cmake\\\\3.22.1\\\\bin\\\\ninja.exe\" ^\n  \"-DCMAKE_LIBRARY_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\732y3f49\\\\obj\\\\arm64-v8a\" ^\n  \"-DCMAKE_RUNTIME_OUTPUT_DIRECTORY\u003dC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\build\\\\intermediates\\\\cxx\\\\Debug\\\\732y3f49\\\\obj\\\\arm64-v8a\" ^\n  \"-DCMAKE_BUILD_TYPE\u003dDebug\" ^\n  \"-BC:\\\\Users\\\\julia\\\\Desktop\\\\Mobile-Lettuce-Deficiency-Detector\\\\Sample App\\\\OpenCV4\\\\.cxx\\\\Debug\\\\732y3f49\\\\arm64-v8a\" ^\n  -GNinja ^\n  \"-DANDROID_STL\u003dc++_shared\"\n",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 623108272
-  },
-  {
-    "level_": 0,
-    "message_": "Exiting generation of C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\Debug\\732y3f49\\arm64-v8a\\compile_commands.json.bin normally",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 803810634
-  },
-  {
-    "level_": 0,
-    "message_": "done executing cmake",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": 1931544084
-  },
-  {
-    "level_": 0,
-    "message_": "deleted unexpected build output C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\build\\intermediates\\cxx\\Debug\\732y3f49\\obj\\arm64-v8a\\libc++_shared.so in incremental regenerate",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -1073104709
-  },
-  {
-    "level_": 0,
-    "message_": "hard linked C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\Debug\\732y3f49\\arm64-v8a\\compile_commands.json to C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\.cxx\\tools\\debug\\arm64-v8a\\compile_commands.json",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
-    "tag_": "debug|arm64-v8a",
-    "diagnosticCode_": 0,
-    "memoizedIsInitialized": 1,
-    "unknownFields": {
-      "fields": {},
-      "fieldsDescending": {}
-    },
-    "memoizedSize": -1,
-    "memoizedHashCode": -814718236
+    "memoizedHashCode": -630479278
   },
   {
     "level_": 0,
     "message_": "JSON generation completed without problems",
-    "file_": "C:\\Users\\julia\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
+    "file_": "C:\\Users\\Justine\\Desktop\\Mobile-Lettuce-Deficiency-Detector\\Sample App\\OpenCV4\\libcxx_helper\\CMakeLists.txt",
     "tag_": "debug|arm64-v8a",
     "diagnosticCode_": 0,
     "memoizedIsInitialized": 1,
@@ -165,6 +39,6 @@
       "fieldsDescending": {}
     },
     "memoizedSize": -1,
-    "memoizedHashCode": -425350128
+    "memoizedHashCode": -14556398
   }
 ]
