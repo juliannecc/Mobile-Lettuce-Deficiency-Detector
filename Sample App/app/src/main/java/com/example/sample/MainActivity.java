@@ -22,6 +22,7 @@ import android.view.View;
 import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.sample.databinding.ActivityMainBinding;
+import com.example.sample.ml.MNetLarge;
 
 import android.widget.Button;
 import android.widget.ImageView;
@@ -105,18 +106,51 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-    public static int[] convertFloatsToInts(float[] input)
-    {
-        if (input == null)
-        {
-            return null; // Or throw an exception - your choice
+    public void classifyImage(Bitmap image){
+        try {
+            MNetLarge model = MNetLarge.newInstance(getApplicationContext());
+
+            // Creates inputs for reference.
+            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, imageSize, imageSize, 3}, DataType.FLOAT32);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * imageSize * imageSize * 3);
+            byteBuffer.order(ByteOrder.nativeOrder());
+            int [] intValues = new int[imageSize * imageSize];
+            image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
+            int pixel = 0;
+
+            for(int i = 0; i < imageSize; i++){
+                for(int j = 0; j < imageSize; j++) {
+                    int val = intValues[pixel++];
+                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f));
+                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f));
+                    byteBuffer.putFloat((val & 0xFF)  * (1.f));
+                }
+            }
+
+            inputFeature0.loadBuffer(byteBuffer);
+
+            // Runs model inference and gets result.
+            MNetLarge.Outputs outputs = model.process(inputFeature0);
+            TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
+
+            float[] confidences = outputFeature0.getFloatArray();
+
+            int MaxPos = 0;
+            float Maxconfidence = 0;
+            for(int i = 0; i < confidences.length; i++){
+                if(confidences[i]>Maxconfidence){
+                    Maxconfidence = confidences[i];
+                    MaxPos = i;
+                }
+            }
+            String[] classes = {"Potassium Deficient", "Nitrogen Deficient", "Healthy"};
+            Result.setText(classes[MaxPos]);
+
+            // Releases model resources if no longer used.
+            model.close();
+        } catch (IOException e) {
+            // TODO Handle the exception
         }
-        int[] output = new int[input.length];
-        for (int i = 0; i < input.length; i++)
-        {
-            output[i] = Math.round(input[i])*255;
-        }
-        return output;
     }
     public float[] segmentImage(Bitmap image) {
         float[] data = new float[0];
@@ -151,35 +185,14 @@ public class MainActivity extends AppCompatActivity {
         return fileChannel.map(FileChannel.MapMode.READ_ONLY,startOffset,declareLength);
     }
 
-//  https://stackoverflow.com/questions/68314872/how-to-convert-the-int-array-to-byte-array-so-that-i-can-make-a-bitmap-by-byte
-    public static byte[] intArrayToByteArray(int[] intArray) {
-
-        byte[] ba = new byte[intArray.length * 4];
-
-        for(int i = 0, k = 0; i < intArray.length; i++) {
-            int temp= intArray[i];
-            for(int j = 0; j < 4; j++, k++) {
-                ba[k] = (byte)((temp>> (8 * j)) & 0xFF);
-            }
-        }
-        return ba;
-    }
-
-    public static Bitmap byteArrayToBitmap(byte[] byteArray, int width, int height) {
-        ByteBuffer buffer = ByteBuffer.wrap(byteArray);
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        bitmap.setHasAlpha(false);
-        bitmap.copyPixelsFromBuffer(buffer);
-        return bitmap;
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
 
         if (resultCode == RESULT_OK) {
             if (requestCode == 3) {
-                Bitmap image = (Bitmap) data.getExtras().get("data");
+                Bitmap image = ((Bitmap) data.getExtras().get("data"))
+                        .copy(Bitmap.Config.ARGB_8888, true);
                 int dimension = Math.min(image.getWidth(), image.getHeight());
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
 
@@ -199,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 Bitmap outputResized = Bitmap.createScaledBitmap(output, 512, 512, false);
-
+                classifyImage(outputResized);
                 ImageView.setImageBitmap(outputResized);
             }else{
                 Uri dat = data.getData();
@@ -222,7 +235,8 @@ public class MainActivity extends AppCompatActivity {
                              }
                     }
                     Bitmap outputResized = Bitmap.createScaledBitmap(output, 512, 512, false);
-                   ImageView.setImageBitmap(outputResized);
+                    classifyImage(outputResized);
+                    ImageView.setImageBitmap(outputResized);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

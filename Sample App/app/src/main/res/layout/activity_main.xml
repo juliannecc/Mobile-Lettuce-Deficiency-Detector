@@ -30,19 +30,46 @@
         />
 
     <TextView
-        android:id="@+id/Result"
+        android:id="@+id/ResultBg"
         android:layout_below="@+id/ImageView"
         android:layout_centerHorizontal="true"
         android:layout_width="336sp"
         android:layout_height="80sp"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="20sp"
+        android:textColor="#c1c1c1"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:background="@drawable/rounded_corner"
+        />
+
+    <TextView
+        android:id="@+id/ResultLabel"
+        android:layout_below="@+id/ImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_width="336sp"
+        android:layout_height="30sp"
+        android:layout_marginTop="30sp"
         android:textColor="#c1c1c1"
         android:text="Diagnosis:"
         android:textStyle="bold"
         android:textSize='20dp'
         android:textAlignment="center"
-        android:background="@drawable/rounded_corner"
         />
+
+    <TextView
+        android:id="@+id/Result"
+        android:layout_below="@+id/ImageView"
+        android:layout_centerHorizontal="true"
+        android:layout_width="336sp"
+        android:layout_height="80sp"
+        android:layout_marginTop="30sp"
+        android:textColor="#486464"
+        android:text=" "
+        android:textStyle="bold"
+        android:textSize='22dp'
+        android:gravity="center"
+        />
+
 
     <Button
         android:id="@+id/CameraBtn"
@@ -52,7 +79,7 @@
         android:layout_below="@+id/Result"
         android:backgroundTint="#6aa975"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20sp"
+        android:layout_marginTop="10sp"
         app:shapeAppearanceOverlay="@style/roundedImageStyle"
 
         />
