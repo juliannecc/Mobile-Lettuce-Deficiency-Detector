@@ -3,6 +3,6 @@
 3    package="org.opencv" >
 4
 5    <uses-sdk android:minSdkVersion="21" />
-5-->C:\Users\julia\Desktop\Mobile-Lettuce-Deficiency-Detector\Sample App\OpenCV4\java\AndroidManifest.xml
+5-->C:\Users\Justine\Desktop\Mobile-Lettuce-Deficiency-Detector\Sample App\OpenCV4\java\AndroidManifest.xml
 6
 7</manifest>
