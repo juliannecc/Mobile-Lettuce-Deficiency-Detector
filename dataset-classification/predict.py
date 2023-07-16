@@ -8,8 +8,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Folders
-source_name = 'test-images'
-target_root = 'test-segmented'
+source_name = 'validate-images'
+target_root = 'validate-segmented'
 
 # Load Model
 model = load_model('../vggseg.h5')
