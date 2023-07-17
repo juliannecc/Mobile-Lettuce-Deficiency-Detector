@@ -23,6 +23,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 
 import com.example.sample.databinding.ActivityMainBinding;
 import com.example.sample.ml.MNetLarge;
+import com.example.sample.ml.MNetSmall;
 
 import android.widget.Button;
 import android.widget.ImageView;
@@ -108,32 +109,16 @@ public class MainActivity extends AppCompatActivity {
     }
     public void classifyImage(Bitmap image){
         try {
-            MNetLarge model = MNetLarge.newInstance(getApplicationContext());
+            MNetSmall model = MNetSmall.newInstance(getApplicationContext());
 
-            // Creates inputs for reference.
-            TensorBuffer inputFeature0 = TensorBuffer.createFixedSize(new int[]{1, imageSize, imageSize, 3}, DataType.FLOAT32);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(4 * imageSize * imageSize * 3);
-            byteBuffer.order(ByteOrder.nativeOrder());
-            int [] intValues = new int[imageSize * imageSize];
-            image.getPixels(intValues, 0, image.getWidth(), 0, 0, image.getWidth(), image.getHeight());
-            int pixel = 0;
+            TensorImage tensorImage = new TensorImage(DataType.FLOAT32);
+            tensorImage.load(image);
 
-            for(int i = 0; i < imageSize; i++){
-                for(int j = 0; j < imageSize; j++) {
-                    int val = intValues[pixel++];
-                    byteBuffer.putFloat(((val >> 16) & 0xFF) * (1.f));
-                    byteBuffer.putFloat(((val >> 8) & 0xFF) * (1.f));
-                    byteBuffer.putFloat((val & 0xFF)  * (1.f));
-                }
-            }
+            TensorBuffer outputBuffer = TensorBuffer.createFixedSize(new int[]{1, 3}, DataType.FLOAT32);
+            MNetSmall.Outputs outputs = model.process(tensorImage.getTensorBuffer());
+            outputBuffer = outputs.getOutputFeature0AsTensorBuffer();
 
-            inputFeature0.loadBuffer(byteBuffer);
-
-            // Runs model inference and gets result.
-            MNetLarge.Outputs outputs = model.process(inputFeature0);
-            TensorBuffer outputFeature0 = outputs.getOutputFeature0AsTensorBuffer();
-
-            float[] confidences = outputFeature0.getFloatArray();
+            float[] confidences = outputBuffer.getFloatArray();
 
             int MaxPos = 0;
             float Maxconfidence = 0;
@@ -193,10 +178,14 @@ public class MainActivity extends AppCompatActivity {
             if (requestCode == 3) {
                 Bitmap image = ((Bitmap) data.getExtras().get("data"))
                         .copy(Bitmap.Config.ARGB_8888, true);
+
                 int dimension = Math.min(image.getWidth(), image.getHeight());
                 image = ThumbnailUtils.extractThumbnail(image, dimension, dimension);
 
-                float[] outputArr = segmentImage(image);
+                Bitmap convertedImage = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight());
+                convertedImage.setConfig(Bitmap.Config.ARGB_8888);
+
+                float[] outputArr = segmentImage(convertedImage);
                 ArrayList<Float> mask = new ArrayList<>();
 
                 for(int i =0;i< outputArr.length;i=i+2){
